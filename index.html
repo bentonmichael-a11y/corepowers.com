@@ -1,0 +1,417 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Core Power Plushies | Sensory-Calibrated Artifacts</title>
+    <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@600;700;800&family=Inter:wght@300;400;600&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg-dark: #0a0812;
+            --card-bg: #131022;
+            --accent-purple: #8b5cf6;
+            --accent-glow: #a78bfa;
+            --accent-gold: #f59e0b;
+            --text-main: #f3f4f6;
+            --text-muted: #9ca3af;
+            --border-color: #2e264d;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            background-color: var(--bg-dark);
+            color: var(--text-main);
+            font-family: 'Inter', sans-serif;
+            line-height: 1.6;
+            overflow-x: hidden;
+        }
+
+        h1, h2, h3, .brand {
+            font-family: 'Cinzel', serif;
+            letter-spacing: 1px;
+        }
+
+        .ambient-glow {
+            position: fixed;
+            top: -20%;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 80vw;
+            height: 60vh;
+            background: radial-gradient(circle, rgba(139, 92, 246, 0.15) 0%, rgba(10, 8, 18, 0) 70%);
+            z-index: -1;
+            pointer-events: none;
+        }
+
+        header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 2rem 5%;
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        .brand {
+            font-size: 1.5rem;
+            font-weight: 800;
+            color: var(--accent-glow);
+            text-shadow: 0 0 10px rgba(167, 139, 250, 0.3);
+        }
+
+        .hero {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 4rem;
+            padding: 5rem 5%;
+            max-width: 1300px;
+            margin: 0 auto;
+            align-items: center;
+        }
+
+        .hero-text h1 {
+            font-size: 3.2rem;
+            line-height: 1.2;
+            margin-bottom: 1.5rem;
+            background: linear-gradient(135deg, #fff 0%, var(--accent-glow) 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .hero-text p {
+            color: var(--text-muted);
+            font-size: 1.1rem;
+            margin-bottom: 2rem;
+        }
+
+        .plushie-preview-card {
+            background: var(--card-bg);
+            border: 1px solid var(--border-color);
+            border-radius: 24px;
+            padding: 2.5rem;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.5), 0 0 30px rgba(139, 92, 246, 0.1);
+            position: relative;
+        }
+
+        .object-display {
+            width: 220px;
+            height: 220px;
+            margin: 0 auto 2rem auto;
+            border-radius: 50%;
+            background: radial-gradient(circle at 30% 30%, #a78bfa, #110826);
+            box-shadow: inset 0 -25px 25px rgba(0,0,0,0.8), 0 0 25px rgba(167, 139, 250, 0.5);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+            overflow: hidden;
+            transition: all 0.3s ease;
+        }
+
+        .texture-overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            border-radius: 50%;
+            pointer-events: none;
+            mix-blend-mode: overlay;
+            opacity: 0.6;
+            transition: all 0.3s ease;
+        }
+
+        .rune-svg {
+            width: 110px;
+            height: 110px;
+            z-index: 2;
+            stroke: rgba(255, 255, 255, 0.85);
+            fill: none;
+            stroke-width: 2.5;
+            filter: drop-shadow(0 0 8px rgba(255, 255, 255, 0.6));
+            transition: all 0.3s ease;
+        }
+
+        .controls {
+            display: flex;
+            flex-direction: column;
+            gap: 1.2rem;
+        }
+
+        .control-group label {
+            display: flex;
+            justify-content: space-between;
+            font-size: 0.9rem;
+            color: var(--text-muted);
+            margin-bottom: 0.5rem;
+        }
+
+        select {
+            width: 100%;
+            padding: 0.8rem;
+            border-radius: 8px;
+            border: 1px solid var(--border-color);
+            background: #0d0b18;
+            color: var(--text-main);
+            font-size: 1rem;
+            cursor: pointer;
+        }
+
+        input[type="range"] {
+            width: 100%;
+            accent-color: var(--accent-purple);
+            background: var(--bg-dark);
+            height: 6px;
+            border-radius: 3px;
+        }
+
+        .cta-form {
+            display: flex;
+            gap: 10px;
+            margin-top: 1.5rem;
+        }
+
+        .cta-form input[type="email"] {
+            flex: 1;
+            padding: 1rem;
+            border-radius: 8px;
+            border: 1px solid var(--border-color);
+            background: #0d0b18;
+            color: #fff;
+            font-size: 1rem;
+        }
+
+        .cta-form button {
+            padding: 1rem 2rem;
+            border-radius: 8px;
+            border: none;
+            background: linear-gradient(135deg, var(--accent-purple), #6d28d9);
+            color: #fff;
+            font-weight: 600;
+            cursor: pointer;
+            transition: transform 0.2s, box-shadow 0.2s;
+        }
+
+        .cta-form button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(139, 92, 246, 0.4);
+        }
+
+        .features {
+            max-width: 1200px;
+            margin: 4rem auto;
+            padding: 0 5%;
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2rem;
+        }
+
+        .feature-card {
+            background: var(--card-bg);
+            border: 1px solid var(--border-color);
+            padding: 2rem;
+            border-radius: 16px;
+        }
+
+        .feature-card h3 {
+            color: var(--accent-glow);
+            margin-bottom: 1rem;
+        }
+
+        .feature-card p {
+            color: var(--text-muted);
+            font-size: 0.95rem;
+        }
+
+        footer {
+            text-align: center;
+            padding: 3rem;
+            border-top: 1px solid var(--border-color);
+            color: var(--text-muted);
+            font-size: 0.85rem;
+        }
+
+        @media (max-width: 900px) {
+            .hero {
+                grid-template-columns: 1fr;
+                gap: 2rem;
+                padding-top: 2rem;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="ambient-glow"></div>
+
+    <header>
+        <div class="brand">CORE POWER</div>
+        <nav><a href="#waitlist" style="color: var(--accent-glow); text-decoration: none;">Get Notified</a></nav>
+    </header>
+
+    <main>
+        <section class="hero">
+            <div class="hero-text">
+                <h1>Neurologically Calibrated Sensory Artifacts</h1>
+                <p>Designed without faces, modeled after power-granting fruits and objects. Combines Deep Pressure Stimulation with zoned textures to ground your nervous system.</p>
+                
+                <div id="waitlist">
+                    <p style="font-size: 0.85rem; color: var(--accent-gold); margin-bottom: 0.5rem;">✦ JOIN THE PRE-LAUNCH WAITLIST</p>
+                    <form class="cta-form" onsubmit="event.preventDefault(); alert('You are on the list!');">
+                        <input type="email" placeholder="Enter your email address" required>
+                        <button type="submit">Reserve VIP Access</button>
+                    </form>
+                </div>
+            </div>
+
+            <div class="plushie-preview-card">
+                <h3 style="text-align: center; margin-bottom: 1.5rem; font-size: 1.1rem; color: var(--text-muted);">Interactive Prototype Configurator</h3>
+                
+                <div class="object-display" id="artifact">
+                    <div class="texture-overlay" id="textureOverlay"></div>
+                    
+                    <svg class="rune-svg" id="runeContainer" viewBox="0 0 100 100">
+                        <circle cx="50" cy="50" r="35" stroke-dasharray="4, 4" />
+                        <path d="M 50 15 L 50 85 M 15 50 L 85 50 M 25 25 L 75 75 M 25 75 L 75 25" />
+                    </svg>
+                </div>
+
+                <div class="controls">
+                    <div class="control-group">
+                        <label><span>Plushie Base Color</span></label>
+                        <select id="colorPicker">
+                            <option value="#ef4444">Red</option>
+                            <option value="#10b981">Green</option>
+                            <option value="#3b82f6">Blue</option>
+                            <option value="#eab308">Yellow</option>
+                            <option value="#a78bfa" selected>Purple</option>
+                        </select>
+                    </div>
+
+                    <div class="control-group">
+                        <label><span>Embossed Rune Sigil</span></label>
+                        <select id="runePicker">
+                            <option value="spiral">Spiral Compass</option>
+                            <option value="sigil">Geometric Sigil</option>
+                            <option value="cracked">Cracked Core</option>
+                        </select>
+                    </div>
+
+                    <div class="control-group">
+                        <label><span>Firmness & Compression</span><span id="firmness-val">Balanced Density</span></label>
+                        <input type="range" min="1" max="3" value="2" id="firmnessSlider">
+                    </div>
+
+                    <div class="control-group">
+                        <label><span>Bead Distribution</span><span id="dist-val">Base Settled</span></label>
+                        <input type="range" min="1" max="3" value="1" id="distSlider">
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section class="features">
+            <div class="feature-card">
+                <h3>Vagus Nerve Activation</h3>
+                <p>Internal glass micro-bead weighting provides gentle, steady Deep Pressure Stimulation (DPS) to slow heart rate and lower stress response.</p>
+            </div>
+            <div class="feature-card">
+                <h3>Dual-Zone Textures</h3>
+                <p>Combining smooth minky exteriors with raised embroidery swirls gives your hands varied tactile feedback to stop racing thoughts.</p>
+            </div>
+            <div class="feature-card">
+                <h3>In-Universe Artifact Design</h3>
+                <p>No faces or facial features. Pure object-based forms inspired by power-granting fruits, potions, and elemental artifacts.</p>
+            </div>
+        </section>
+    </main>
+
+    <footer>
+        <p>&copy; Core Power Plushies. All rights reserved.</p>
+    </footer>
+
+    <script>
+        const colorPicker = document.getElementById('colorPicker');
+        const runePicker = document.getElementById('runePicker');
+        const firmnessSlider = document.getElementById('firmnessSlider');
+        const firmnessVal = document.getElementById('firmness-val');
+        const distSlider = document.getElementById('distSlider');
+        const distVal = document.getElementById('dist-val');
+        
+        const artifact = document.getElementById('artifact');
+        const runeContainer = document.getElementById('runeContainer');
+
+        const firmnessText = {
+            1: "Ultra-Squishy",
+            2: "Balanced Density",
+            3: "Firm"
+        };
+
+        const distText = {
+            1: "Base Settled",
+            2: "Center-Weighted Core",
+            3: "Edge-Weighted Perimeter"
+        };
+
+        const runeSVGs = {
+            spiral: `
+                <circle cx="50" cy="50" r="35" stroke-dasharray="4, 4" />
+                <path d="M 50 15 L 50 85 M 15 50 L 85 50 M 25 25 L 75 75 M 25 75 L 75 25" />
+            `,
+            sigil: `
+                <polygon points="50,15 85,80 15,80" />
+                <polygon points="50,85 85,20 15,20" />
+                <circle cx="50" cy="50" r="10" />
+            `,
+            cracked: `
+                <path d="M 50 10 L 45 35 L 55 55 L 40 70 L 50 90" stroke-width="3" />
+                <path d="M 20 40 L 45 35 L 70 50 L 85 45" stroke-width="2" />
+            `
+        };
+
+        colorPicker.addEventListener('change', (e) => {
+            artifact.style.background = `radial-gradient(circle at 30% 30%, ${e.target.value}, #110826)`;
+            // Also update glow highlight dynamically based on selected color:
+            if (distSlider.value == 1) {
+                artifact.style.boxShadow = `inset 0 -25px 25px rgba(0,0,0,0.8), 0 0 25px ${e.target.value}88`;
+            } else if (distSlider.value == 2) {
+                artifact.style.boxShadow = `inset 0 0 30px rgba(0,0,0,0.8), 0 0 25px ${e.target.value}88`;
+            } else {
+                artifact.style.boxShadow = `inset 0 0 15px rgba(255,255,255,0.4), 0 0 35px ${e.target.value}88`;
+            }
+        });
+
+        runePicker.addEventListener('change', (e) => {
+            runeContainer.innerHTML = runeSVGs[e.target.value];
+        });
+
+        firmnessSlider.addEventListener('input', (e) => {
+            const val = e.target.value;
+            firmnessVal.textContent = firmnessText[val];
+            if (val == 1) {
+                artifact.style.borderRadius = "45% 55% 50% 50% / 55% 45% 55% 45%";
+            } else if (val == 2) {
+                artifact.style.borderRadius = "50%";
+            } else {
+                artifact.style.borderRadius = "48%";
+            }
+        });
+
+        distSlider.addEventListener('input', (e) => {
+            const val = e.target.value;
+            distVal.textContent = distText[val];
+            if (val == 1) {
+                artifact.style.boxShadow = `inset 0 -25px 25px rgba(0,0,0,0.8), 0 0 25px ${colorPicker.value}88`;
+            } else if (val == 2) {
+                artifact.style.boxShadow = `inset 0 0 30px rgba(0,0,0,0.8), 0 0 25px ${colorPicker.value}88`;
+            } else {
+                artifact.style.boxShadow = `inset 0 0 15px rgba(255,255,255,0.4), 0 0 35px ${colorPicker.value}88`;
+            }
+        });
+    </script>
+</body>
+</html>
